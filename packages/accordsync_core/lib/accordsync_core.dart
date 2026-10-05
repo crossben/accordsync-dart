@@ -1,7 +1,14 @@
-/// Accord's pure merge core: hybrid logical clocks, operations and merge strategies.
-///
-/// A port of `@accordsync/core`. It merges exactly like the TypeScript version: the golden vectors
-/// in `contract/vectors/` are the proof.
+/// The Accord merge core: hybrid logical clocks, ops, the `lww`, `counter`, `set` and `conflict`
+/// strategies, and the replica. Pure Dart, no I/O; merges byte-for-byte like `@accordsync/core`.
 library;
 
+export 'src/canonical.dart';
+export 'src/errors.dart';
+export 'src/hlc.dart';
+export 'src/op.dart';
 export 'src/protocol.dart';
+export 'src/replica.dart';
+export 'src/schema.dart';
+export 'src/strategies.dart';
+export 'src/wire.dart';
+export 'src/writer.dart';

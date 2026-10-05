@@ -21,26 +21,19 @@ void main(List<String> args) {
   for (final part in parts) {
     final from = Directory('${app.path}/$part');
     final to = Directory('contract/$part');
-    final source = {
-      for (final f in from.listSync().whereType<File>().where((f) => f.path.endsWith('.json')))
-        f.uri.pathSegments.last: f.readAsStringSync(),
-    };
-    final current = to.existsSync()
-        ? {
-            for (final f in to.listSync().whereType<File>())
-              f.uri.pathSegments.last: f.readAsStringSync(),
-          }
-        : <String, String>{};
+    final source = _jsonFiles(from);
+    final current = to.existsSync() ? _jsonFiles(to) : <String, String>{};
 
     for (final name in {...source.keys, ...current.keys}) {
       if (source[name] == current[name]) continue;
       problems.add('$part/$name');
       if (!check) {
+        final target = File('${to.path}/$name');
         if (source[name] == null) {
-          File('${to.path}/$name').deleteSync();
+          target.deleteSync();
         } else {
-          to.createSync(recursive: true);
-          File('${to.path}/$name').writeAsStringSync(source[name]!);
+          target.parent.createSync(recursive: true);
+          target.writeAsStringSync(source[name]!);
         }
       }
     }
@@ -68,3 +61,10 @@ void main(List<String> args) {
     problems.isEmpty ? 'contract/ already up to date.' : 'Updated ${problems.length} file(s).',
   );
 }
+
+/// Every `.json` file under [dir], by path relative to it (`random/cases.json`).
+Map<String, String> _jsonFiles(Directory dir) => {
+  for (final f
+      in dir.listSync(recursive: true).whereType<File>().where((f) => f.path.endsWith('.json')))
+    f.path.substring(dir.path.length + 1): f.readAsStringSync(),
+};

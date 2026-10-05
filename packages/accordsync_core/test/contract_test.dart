@@ -4,17 +4,7 @@ import 'dart:io';
 import 'package:accordsync_core/accordsync_core.dart';
 import 'package:test/test.dart';
 
-/// The shared contract (golden vectors, protocol schemas), committed in `contract/` at the
-/// workspace root. F1 makes the core pass every vector; for now, check the contract is there.
-Directory contractDir() {
-  var dir = Directory.current;
-  while (!Directory('${dir.path}/contract').existsSync()) {
-    final parent = dir.parent;
-    if (parent.path == dir.path) throw StateError('contract/ not found');
-    dir = parent;
-  }
-  return Directory('${dir.path}/contract');
-}
+import 'support.dart';
 
 void main() {
   test('speaks protocol version 1, like the TypeScript packages', () {
