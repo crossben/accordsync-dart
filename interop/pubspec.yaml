@@ -1,0 +1,15 @@
+name: accordsync_interop
+publish_to: none
+description: Dart and TypeScript Accord clients against the real server (mixed-fleet test).
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  accordsync: ^0.2.0
+  http: ^1.6.0
+
+dev_dependencies:
+  lints: ^6.1.0
+  test: ">=1.25.0 <2.0.0"

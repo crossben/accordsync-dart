@@ -9,6 +9,7 @@ workspace:
   - packages/accordsync_core
   - packages/accordsync
   - packages/accordsync_flutter
+  - interop
 
 dev_dependencies:
   lints: ^6.1.0

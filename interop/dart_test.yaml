@@ -1,0 +1,2 @@
+# Every test shares one server and resets it: run test files one at a time.
+concurrency: 1
