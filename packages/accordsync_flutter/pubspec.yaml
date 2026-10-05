@@ -12,10 +12,12 @@ environment:
 
 dependencies:
   accordsync: ^0.2.0
+  drift: ^2.35.1
   flutter:
     sdk: flutter
 
 dev_dependencies:
+  accordsync_testing: any
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

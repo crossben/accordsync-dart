@@ -1,0 +1,14 @@
+name: accordsync_testing
+publish_to: none
+description: Shared test suites for the Accord Dart packages (the storage adapter contract).
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  accordsync: ^0.2.0
+  test: ">=1.25.0 <2.0.0"
+
+dev_dependencies:
+  lints: ^6.1.0

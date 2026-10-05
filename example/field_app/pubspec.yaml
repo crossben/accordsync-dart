@@ -1,0 +1,23 @@
+name: field_app
+description: Accord demo - two field agents edit one dossier offline, then sync through the real server.
+publish_to: none
+version: 0.2.0
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  accordsync_flutter: ^0.2.0
+  drift_flutter: ^0.3.1
+  flutter:
+    sdk: flutter
+  http: ^1.6.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

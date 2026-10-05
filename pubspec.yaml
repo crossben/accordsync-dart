@@ -9,6 +9,8 @@ workspace:
   - packages/accordsync_core
   - packages/accordsync
   - packages/accordsync_flutter
+  - packages/accordsync_testing
+  - example/field_app
   - interop
 
 dev_dependencies:
