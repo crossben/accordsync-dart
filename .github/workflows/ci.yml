@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * *' # daily: catches a contract change in crossben/accordsync
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+      - name: accordsync_core
+        run: dart test
+        working-directory: packages/accordsync_core
+      - name: accordsync
+        run: dart test
+        working-directory: packages/accordsync
+      - name: accordsync_flutter
+        run: flutter test
+        working-directory: packages/accordsync_flutter
+
+  # The committed contract/ must match the Accord repository (golden vectors, protocol schemas).
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: crossben/accordsync
+          path: accord-src
+      - uses: dart-lang/setup-dart@v1
+      - run: dart run tool/sync_contract.dart --check
+        env:
+          ACCORD_APP_DIR: accord-src
