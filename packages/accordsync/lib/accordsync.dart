@@ -4,4 +4,9 @@
 /// storage on devices and widgets).
 library;
 
-export 'package:accordsync_core/accordsync_core.dart' show protocolVersion;
+export 'package:accordsync_core/accordsync_core.dart';
+
+export 'src/client.dart';
+export 'src/memory_storage.dart';
+export 'src/storage.dart';
+export 'src/transport.dart';
