@@ -3,7 +3,7 @@
 //
 //   {"cmd":"open","deviceId":"ts-1","token":"…","url":"http://localhost:8787","seed":7,"loss":0.2}
 //   {"cmd":"assign"|"inc"|"add"|"remove","record":"…","field":"…","value":…}
-//   {"cmd":"sync"} {"cmd":"heal"} {"cmd":"snapshot"} {"cmd":"close"}
+//   {"cmd":"sync"} {"cmd":"heal"} {"cmd":"loss","loss":0.25} {"cmd":"snapshot"} {"cmd":"close"}
 import { createInterface } from 'node:readline';
 import { AccordClient, httpTransport, MemoryStorage } from '@accordsync/client';
 import { canonicalJson } from '@accordsync/core';
@@ -60,6 +60,9 @@ async function run(m) {
       }
     case 'heal':
       loss = 0;
+      return {};
+    case 'loss':
+      loss = m.loss;
       return {};
     case 'snapshot':
       return {

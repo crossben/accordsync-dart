@@ -88,7 +88,35 @@ void main() {
                 : {'cmd': cmd, 'record': record, 'field': field, 'value': value},
           );
         }
-        if (step == 75) compactions = ((await compactServer())['records']! as num).toInt();
+        if (step == 75) {
+          // Compaction only folds what every live device has pulled, and on a lossy network some
+          // device is always behind. Heal, let everyone catch up, compact, then break the network
+          // again: later lost-response retries then hit ops that were folded into snapshots.
+          for (final n in networks) {
+            n.loss = 0;
+          }
+          for (final d in tsDevices) {
+            await d.call({'cmd': 'heal'});
+          }
+          // Three rounds: the server records the cursor a device sent, one pull behind, and pushes
+          // made in round one by later devices move the feed past earlier devices again.
+          for (var round = 0; round < 3; round++) {
+            for (final d in dartDevices) {
+              await d.sync();
+            }
+            for (final d in tsDevices) {
+              await d.call({'cmd': 'sync'});
+            }
+          }
+          compactions = ((await compactServer())['records']! as num).toInt();
+          expect(compactions, greaterThan(0), reason: 'the mid-run compaction folded nothing');
+          for (final n in networks) {
+            n.loss = 0.25;
+          }
+          for (final d in tsDevices) {
+            await d.call({'cmd': 'loss', 'loss': 0.25});
+          }
+        }
       }
 
       // Heal the network, then sync everyone until nothing is pending and every device is current.
