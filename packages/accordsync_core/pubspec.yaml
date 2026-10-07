@@ -1,6 +1,6 @@
 name: accordsync_core
 description: Accord's pure merge core for Dart - hybrid logical clocks, operations and the lww, counter, set and conflict merge strategies.
-version: 0.2.0
+version: 0.3.0
 homepage: https://accord.benhattab.pro/docs/schema/
 repository: https://github.com/crossben/accordsync-dart
 topics: [offline-first, sync, crdt, local-first]

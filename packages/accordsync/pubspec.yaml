@@ -1,6 +1,6 @@
 name: accordsync
 description: The Accord client for Dart - local-first writes, background sync, conflicts and refusals. Works in Flutter, CLI tools and servers.
-version: 0.2.0
+version: 0.3.0
 homepage: https://accord.benhattab.pro/docs/client/
 repository: https://github.com/crossben/accordsync-dart
 topics: [offline-first, sync, crdt, local-first]
@@ -10,7 +10,7 @@ environment:
   sdk: ^3.12.0
 
 dependencies:
-  accordsync_core: ^0.2.0
+  accordsync_core: ^0.3.0
   http: ^1.6.0
 
 dev_dependencies:

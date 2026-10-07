@@ -7,7 +7,7 @@ environment:
   sdk: ^3.12.0
 
 dependencies:
-  accordsync: ^0.2.0
+  accordsync: ^0.3.0
   http: ^1.6.0
 
 dev_dependencies:
