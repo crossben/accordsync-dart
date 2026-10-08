@@ -111,6 +111,9 @@ final class AccordClient {
   Future<void> _chain = Future.value();
   Future<void>? _syncing;
   Timer? _timer;
+
+  /// A write came in during a round: start another soon after it.
+  bool _again = false;
   bool _running = false;
   int _failures = 0;
   int? _lastSyncAt;
@@ -195,7 +198,14 @@ final class AccordClient {
   // ── sync ───────────────────────────────────────────────────────────────
 
   /// One full round: push the outbox, then pull every page. Concurrent calls share the round.
-  Future<void> sync() => _syncing ??= _round().whenComplete(() => _syncing = null);
+  Future<void> sync() => _syncing ??= _round().whenComplete(() {
+    _syncing = null;
+    // A write during the round is not in it: sync again soon, not after the interval.
+    if (_again) {
+      _again = false;
+      _schedule(const Duration(milliseconds: 50));
+    }
+  });
 
   /// Syncs in the background: after each write, every `syncInterval`, and with backoff on errors.
   void start() {
@@ -349,9 +359,13 @@ final class AccordClient {
   void _schedule(Duration delay) {
     _timer?.cancel();
     if (!_running) return;
-    _timer = Timer(delay, () {
+    late final Timer timer;
+    timer = Timer(delay, () {
       sync().then(
-        (_) => _schedule(_o.syncInterval),
+        // Unless a write rescheduled sooner meanwhile.
+        (_) {
+          if (identical(_timer, timer)) _schedule(_o.syncInterval);
+        },
         onError: (Object error) {
           _failures++;
           _lastError = error;
@@ -365,11 +379,17 @@ final class AccordClient {
         },
       );
     });
+    _timer = timer;
   }
 
   /// After a write, sync shortly (writes in a burst share one round).
   void _soon() {
-    if (_running && _failures == 0) _schedule(const Duration(milliseconds: 50));
+    if (!_running || _failures != 0) return;
+    if (_syncing != null) {
+      _again = true;
+    } else {
+      _schedule(const Duration(milliseconds: 50));
+    }
   }
 
   LocalWriter _newWriter(({Hlc hlc, int seq})? resume) => LocalWriter(

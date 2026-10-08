@@ -418,6 +418,35 @@ void main() {
     expect(awa.status().lastError, isNull);
   });
 
+  test(
+    'a write during a background round is synced soon after it, not after the interval',
+    () async {
+      final spy = _Spy(server.transportFor('awa'), [], []);
+      final awa = await AccordClient.open(
+        schema: schema,
+        storage: MemoryStorage(),
+        transport: spy,
+        deviceId: 'awa-again',
+        syncInterval: const Duration(seconds: 60),
+      );
+      final wrote = Completer<void>();
+      spy.duringPull = () async {
+        await awa.assign('dossier:1', 'zone', 'dakar');
+        wrote.complete();
+        // Long enough for the write's 50ms timer to fire while the round is still running.
+        await Future<void>.delayed(const Duration(milliseconds: 200));
+      };
+      awa.start();
+      await wrote.future.timeout(const Duration(seconds: 5));
+      final deadline = DateTime.now().add(const Duration(seconds: 3));
+      while (awa.status().pending > 0 && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+      }
+      expect(awa.status().pending, 0); // well before syncInterval
+      await awa.close();
+    },
+  );
+
   test('a failed round leaves the outbox intact, and the next one delivers it', () async {
     final awa = await open('awa', 'awa-phone');
     await awa.assign('dossier:1', 'zone', 'dakar');

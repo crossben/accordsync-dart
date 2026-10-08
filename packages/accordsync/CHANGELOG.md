@@ -1,3 +1,8 @@
+## Unreleased
+
+- Fixed: a write made while a sync round was in flight waited for the next `syncInterval` (30 s by
+  default) instead of syncing about 50 ms after the round.
+
 ## 0.3.0
 
 - Version aligned with the TypeScript, PHP and Python packages 0.3.0: same protocol v1, same merge
