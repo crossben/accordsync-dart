@@ -1,6 +1,6 @@
 name: accordsync_flutter
 description: Accord for Flutter - drift storage on the device, widgets for records, conflicts and sync status, and sync that follows the app lifecycle.
-version: 0.3.0
+version: 0.3.2
 homepage: https://accord.benhattab.pro/docs/
 repository: https://github.com/crossben/accordsync-dart
 topics: [offline-first, sync, flutter, local-first]
@@ -11,7 +11,7 @@ environment:
   flutter: '>=3.44.0'
 
 dependencies:
-  accordsync: ^0.3.0
+  accordsync: ^0.3.2
   drift: ^2.35.1
   flutter:
     sdk: flutter

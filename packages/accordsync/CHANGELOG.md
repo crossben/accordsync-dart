@@ -1,7 +1,9 @@
-## Unreleased
+## 0.3.2
 
 - Fixed: a write made while a sync round was in flight waited for the next `syncInterval` (30 s by
   default) instead of syncing about 50 ms after the round.
+- Version aligned with the other Accord packages 0.3.2 (0.3.1 was a server-only fix: works with
+  every server 0.3.x).
 
 ## 0.3.0
 

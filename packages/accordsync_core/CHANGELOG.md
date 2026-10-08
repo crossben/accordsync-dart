@@ -1,3 +1,8 @@
+## 0.3.2
+
+- Version aligned with `accordsync` 0.3.2 (a background-sync fix in the client); no change in
+  this package.
+
 ## 0.3.0
 
 - Version aligned with the TypeScript, PHP and Python packages 0.3.0: same protocol v1, same merge
